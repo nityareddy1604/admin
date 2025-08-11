@@ -24,13 +24,23 @@ export async function userGrowth(body) {
             },
             attributes: [
                 [User.sequelize.fn('DATE', User.sequelize.col('created_at')), 'date'],
-                [User.sequelize.fn('COUNT', User.sequelize.col('id')), 'new_users'],
-                [User.sequelize.fn('SUM', User.sequelize.fn('COUNT', User.sequelize.col('id'))), 'cumulative_users']
+                [User.sequelize.fn('COUNT', User.sequelize.col('id')), 'new_users']
             ],
             group: [User.sequelize.fn('DATE', User.sequelize.col('created_at'))],
             order: [[User.sequelize.fn('DATE', User.sequelize.col('created_at')), 'ASC']],
             raw: true
         });
+        // Calculate cumulative manually
+        let cumulative = 0;
+        const result = growthData.map(item => {
+            cumulative += parseInt(item.new_users);
+            return {
+                date: item.date,
+                new_users: parseInt(item.new_users),
+                cumulative_users: cumulative
+            };
+        });
+
 
         return {
             statusCode: 200,

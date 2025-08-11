@@ -297,6 +297,11 @@ UserSelection.belongsTo(User, {
     as: 'user'
 });
 
+Form.hasMany(FormResponses, {
+    foreignKey: 'form_id',
+    as: 'form_responses'  // Give it an alias
+});
+
 export let cache = null;
 
 let ready = false;

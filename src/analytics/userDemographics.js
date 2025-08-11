@@ -12,17 +12,18 @@ export async function userDemographics(body) {
     delete body.requestId;
     
     try {
-        // Query 1: Geographic distribution (matching your JOIN logic)
+        // Query 1: Geographic distribution - fix the table alias issue
         const byCountry = await UserInformation.findAll({
             attributes: [
                 'country',
                 [UserInformation.sequelize.fn('COUNT', UserInformation.sequelize.col('UserInformation.id')), 'count'],
-                [UserInformation.sequelize.fn('COUNT', UserInformation.sequelize.literal("CASE WHEN \"User\".\"persona_type\" = 'founder' THEN 1 END")), 'founders'],
-                [UserInformation.sequelize.fn('COUNT', UserInformation.sequelize.literal("CASE WHEN \"User\".\"persona_type\" = 'sme' THEN 1 END")), 'smes'],
-                [UserInformation.sequelize.fn('COUNT', UserInformation.sequelize.literal("CASE WHEN \"User\".\"persona_type\" = 'respondent' THEN 1 END")), 'respondents']
+                [UserInformation.sequelize.fn('COUNT', UserInformation.sequelize.literal("CASE WHEN \"user\".\"persona_type\" = 'founder' THEN 1 END")), 'founders'],
+                [UserInformation.sequelize.fn('COUNT', UserInformation.sequelize.literal("CASE WHEN \"user\".\"persona_type\" = 'sme' THEN 1 END")), 'smes'],
+                [UserInformation.sequelize.fn('COUNT', UserInformation.sequelize.literal("CASE WHEN \"user\".\"persona_type\" = 'respondent' THEN 1 END")), 'respondents']
             ],
             include: [{
                 model: User,
+                as: 'user',
                 attributes: [],
                 required: true
             }],
@@ -35,16 +36,17 @@ export async function userDemographics(body) {
             raw: true
         });
 
-        // Query 2: Industry distribution (matching your industry logic)
+        // Query 2: Industry distribution - fix the table alias issue
         const byIndustry = await UserInformation.findAll({
             attributes: [
                 'industry',
                 [UserInformation.sequelize.fn('COUNT', UserInformation.sequelize.col('UserInformation.id')), 'count'],
-                [UserInformation.sequelize.fn('COUNT', UserInformation.sequelize.literal("CASE WHEN \"User\".\"persona_type\" = 'founder' THEN 1 END")), 'founders'],
-                [UserInformation.sequelize.fn('COUNT', UserInformation.sequelize.literal("CASE WHEN \"User\".\"persona_type\" = 'sme' THEN 1 END")), 'smes']
+                [UserInformation.sequelize.fn('COUNT', UserInformation.sequelize.literal("CASE WHEN \"user\".\"persona_type\" = 'founder' THEN 1 END")), 'founders'],
+                [UserInformation.sequelize.fn('COUNT', UserInformation.sequelize.literal("CASE WHEN \"user\".\"persona_type\" = 'sme' THEN 1 END")), 'smes']
             ],
             include: [{
                 model: User,
+                as: 'user',
                 attributes: [],
                 required: true
             }],
@@ -56,7 +58,7 @@ export async function userDemographics(body) {
             raw: true
         });
 
-        // Query 3: Profile completion stats (matching your completion logic)
+        // Query 3: Profile completion stats (this one should work as-is)
         const profileCompletion = await UserInformation.findOne({
             attributes: [
                 [UserInformation.sequelize.fn('COUNT', UserInformation.sequelize.col('id')), 'total_profiles'],

@@ -39,20 +39,22 @@ export async function chimeTranscripts(body) {
             include: [
                 {
                     model: User,
-                    as: 'Creator',
+                    as: 'creator',  // ✅ Use correct alias
                     attributes: ['email'],
                     include: [{
                         model: UserInformation,
+                        as: 'user_information',  // ✅ Add missing 'as'
                         attributes: ['name'],
                         required: false
                     }]
                 },
                 {
                     model: User,
-                    as: 'Participant',
+                    as: 'participant',  // ✅ Use correct alias
                     attributes: ['email'],
                     include: [{
                         model: UserInformation,
+                        as: 'user_information',  // ✅ Add missing 'as'
                         attributes: ['name'],
                         required: false
                     }]

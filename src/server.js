@@ -356,18 +356,18 @@ export const app = async (event, context, requestId) => {
         
 
                 // ===== ANALYTICS LAMBDA FUNCTIONS =====
-        case ADMIN_API_PATHS.HEALTH_CHECK: {
+        case ADMIN_API_PATHS.HEALTH: {
             return await healthCheck(body);
         }
-        case ADMIN_API_PATHS.USER_OVERVIEW: {
+        case ADMIN_API_PATHS.USERS_OVERVIEW: {
             const period = event.queryStringParameters?.period || 'all';
             return await userOverview({ ...body, period });
         }
-        case ADMIN_API_PATHS.USER_GROWTH: {
+        case ADMIN_API_PATHS.USERS_GROWTH: {
             const period = event.queryStringParameters?.period || '30';
             return await userGrowth({ ...body, period });
         }
-        case ADMIN_API_PATHS.USER_DEMOGRAPHICS: {
+        case ADMIN_API_PATHS.USERS_DEMOGRAPHICS: {
             return await userDemographics(body);
         }
         case ADMIN_API_PATHS.IDEAS_OVERVIEW: {

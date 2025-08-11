@@ -212,12 +212,12 @@ expressApp.post(ADMIN_API_PATHS.MY_IDEA, async (req, res) => {
 // Analytics Routes
 
 // Health Check - GET /admin/health
-expressApp.get(ADMIN_API_PATHS.HEALTH_CHECK, async (req, res) => {
+expressApp.get(ADMIN_API_PATHS.HEALTH, async (req, res) => {
     console.log('🔍 Health Check route hit');
     
     const result = await lambdaHandler({
         body: JSON.stringify({}),
-        rawPath: ADMIN_API_PATHS.HEALTH_CHECK,
+        rawPath: ADMIN_API_PATHS.HEALTH,
         headers: req.headers,
         httpMethod: 'GET'
     });
@@ -225,12 +225,12 @@ expressApp.get(ADMIN_API_PATHS.HEALTH_CHECK, async (req, res) => {
 });
 
 // User Overview - GET /admin/analytics/users/overview
-expressApp.get(ADMIN_API_PATHS.USER_OVERVIEW, async (req, res) => {
+expressApp.get(ADMIN_API_PATHS.USERS_OVERVIEW, async (req, res) => {
     console.log('🔍 User Overview route hit');
     
     const result = await lambdaHandler({
         body: JSON.stringify({}),
-        rawPath: ADMIN_API_PATHS.USER_OVERVIEW,
+        rawPath: ADMIN_API_PATHS.USERS_OVERVIEW,
         headers: req.headers,
         httpMethod: 'GET',
         queryStringParameters: req.query
@@ -239,12 +239,12 @@ expressApp.get(ADMIN_API_PATHS.USER_OVERVIEW, async (req, res) => {
 });
 
 // User Growth Tracking - GET /admin/analytics/users/growth
-expressApp.get(ADMIN_API_PATHS.USER_GROWTH, async (req, res) => {
+expressApp.get(ADMIN_API_PATHS.USERS_GROWTH, async (req, res) => {
     console.log('🔍 User Growth route hit');
     
     const result = await lambdaHandler({
         body: JSON.stringify({}),
-        rawPath: ADMIN_API_PATHS.USER_GROWTH,
+        rawPath: ADMIN_API_PATHS.USERS_GROWTH,
         headers: req.headers,
         httpMethod: 'GET',
         queryStringParameters: req.query
@@ -253,12 +253,12 @@ expressApp.get(ADMIN_API_PATHS.USER_GROWTH, async (req, res) => {
 });
 
 // User Demographics - GET /admin/analytics/users/demographics
-expressApp.get(ADMIN_API_PATHS.USER_DEMOGRAPHICS, async (req, res) => {
+expressApp.get(ADMIN_API_PATHS.USERS_DEMOGRAPHICS, async (req, res) => {
     console.log('🔍 User Demographics route hit');
     
     const result = await lambdaHandler({
         body: JSON.stringify({}),
-        rawPath: ADMIN_API_PATHS.USER_DEMOGRAPHICS,
+        rawPath: ADMIN_API_PATHS.USERS_DEMOGRAPHICS,
         headers: req.headers,
         httpMethod: 'GET'
     });

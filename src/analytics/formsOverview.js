@@ -36,7 +36,7 @@ export async function formsOverview(body) {
             whereClause.created_at = dateFilter;
         }
 
-        // Query 1: Form stats (matching your form stats logic)
+        // Query 1: Form stats (working fine)
         const formStats = await Form.findOne({
             where: whereClause,
             attributes: [
@@ -46,7 +46,7 @@ export async function formsOverview(body) {
             raw: true
         });
 
-        // Query 2: Total responses (matching your response count logic)
+        // Query 2: Total responses (working fine)
         const responseStats = await FormResponses.findOne({
             where: whereClause,
             attributes: [
@@ -55,36 +55,42 @@ export async function formsOverview(body) {
             raw: true
         });
 
-        // Query 3: Form completion rate (matching your completion logic)
-        const completionStats = await Form.findOne({
-            where: whereClause,
-            include: [{
-                model: FormResponses,
-                required: false,
-                attributes: []
-            }],
-            attributes: [
-                [Form.sequelize.fn('COUNT', Form.sequelize.fn('DISTINCT', Form.sequelize.col('Form.id'))), 'total_forms'],
-                [Form.sequelize.fn('COUNT', Form.sequelize.fn('DISTINCT', Form.sequelize.col('FormResponses.form_id'))), 'forms_with_responses'],
-                [Form.sequelize.literal('CAST((COUNT(DISTINCT "FormResponses"."form_id")::numeric / NULLIF(COUNT(DISTINCT "Form"."id")::numeric, 0) * 100) AS DECIMAL(5,2))'), 'completion_rate']
-            ],
-            raw: true
-        });
+        // Query 3: Completion rate using raw SQL to avoid Sequelize complexity
+        const completionQuery = `
+            SELECT 
+                COUNT(DISTINCT f.id) as total_forms,
+                COUNT(DISTINCT fr.form_id) as forms_with_responses,
+                CASE 
+                    WHEN COUNT(DISTINCT f.id) = 0 THEN 0
+                    ELSE ROUND((COUNT(DISTINCT fr.form_id)::numeric / COUNT(DISTINCT f.id)::numeric * 100), 2)
+                END as completion_rate
+            FROM forms f 
+            LEFT JOIN form_responses fr ON f.id = fr.form_id
+            ${dateFilter ? 'WHERE f.created_at >= $1' : ''}
+        `;
+
+        const completionStats = await Form.sequelize.query(
+            completionQuery,
+            {
+                bind: dateFilter ? [dateFilter[Op.gte]] : [],
+                type: Form.sequelize.QueryTypes.SELECT
+            }
+        );
 
         return {
             statusCode: 200,
             body: {
                 forms: {
-                    total_forms: parseInt(formStats.total_forms),
-                    forms_with_url: parseInt(formStats.forms_with_url)
+                    total_forms: parseInt(formStats.total_forms || 0),
+                    forms_with_url: parseInt(formStats.forms_with_url || 0)
                 },
                 totalResponses: {
-                    total_responses: parseInt(responseStats.total_responses)
+                    total_responses: parseInt(responseStats.total_responses || 0)
                 },
                 completion: {
-                    total_forms: parseInt(completionStats.total_forms),
-                    forms_with_responses: parseInt(completionStats.forms_with_responses),
-                    completion_rate: parseFloat(completionStats.completion_rate)
+                    total_forms: parseInt(completionStats[0].total_forms || 0),
+                    forms_with_responses: parseInt(completionStats[0].forms_with_responses || 0),
+                    completion_rate: parseFloat(completionStats[0].completion_rate || 0)
                 },
                 message: 'Forms overview retrieved successfully'
             }

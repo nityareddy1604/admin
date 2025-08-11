@@ -11,51 +11,46 @@ export async function engagementFunnel(body) {
     delete body.requestId;
     
     try {
-        // Single query matching your exact funnel logic with JOINs
-        const userJourney = await User.findOne({
-            include: [
-                {
-                    model: UserInformation,
-                    required: false,
-                    attributes: []
-                },
-                {
-                    model: Idea,
-                    required: false,
-                    attributes: []
-                },
-                {
-                    model: Form,
-                    as: 'CreatedForms',
-                    required: false,
-                    attributes: []
-                },
-                {
-                    model: FormResponses,
-                    as: 'FormResponses',
-                    required: false,
-                    attributes: []
-                }
-            ],
-            attributes: [
-                [User.sequelize.fn('COUNT', User.sequelize.fn('DISTINCT', User.sequelize.col('User.id'))), 'total_users'],
-                [User.sequelize.fn('COUNT', User.sequelize.fn('DISTINCT', User.sequelize.col('UserInformation.user_id'))), 'users_with_profiles'],
-                [User.sequelize.fn('COUNT', User.sequelize.fn('DISTINCT', User.sequelize.col('Ideas.user_id'))), 'users_with_ideas'],
-                [User.sequelize.fn('COUNT', User.sequelize.fn('DISTINCT', User.sequelize.col('CreatedForms.creator_id'))), 'users_with_forms'],
-                [User.sequelize.fn('COUNT', User.sequelize.fn('DISTINCT', User.sequelize.col('FormResponses.responder_id'))), 'users_with_responses']
-            ],
-            raw: true
+        // Use separate Sequelize queries to avoid complex joins
+        
+        // 1. Total users
+        const totalUsers = await User.count({
+            where: { deleted_at: null }
+        });
+
+        // 2. Users with profiles
+        const usersWithProfiles = await UserInformation.count({
+            distinct: true,
+            col: 'user_id'
+        });
+
+        // 3. Users with ideas  
+        const usersWithIdeas = await Idea.count({
+            distinct: true,
+            col: 'user_id'
+        });
+
+        // 4. Users with forms (as creators)
+        const usersWithForms = await Form.count({
+            distinct: true,
+            col: 'creator_id'
+        });
+
+        // 5. Users with responses (as responders)
+        const usersWithResponses = await FormResponses.count({
+            distinct: true,
+            col: 'responder_id'
         });
 
         return {
             statusCode: 200,
             body: {
                 userJourney: {
-                    total_users: parseInt(userJourney.total_users || 0),
-                    users_with_profiles: parseInt(userJourney.users_with_profiles || 0),
-                    users_with_ideas: parseInt(userJourney.users_with_ideas || 0),
-                    users_with_forms: parseInt(userJourney.users_with_forms || 0),
-                    users_with_responses: parseInt(userJourney.users_with_responses || 0)
+                    total_users: totalUsers || 0,
+                    users_with_profiles: usersWithProfiles || 0,
+                    users_with_ideas: usersWithIdeas || 0,
+                    users_with_forms: usersWithForms || 0,
+                    users_with_responses: usersWithResponses || 0
                 },
                 message: 'Engagement funnel retrieved successfully'
             }
@@ -74,4 +69,3 @@ export async function engagementFunnel(body) {
         };
     }
 }
-

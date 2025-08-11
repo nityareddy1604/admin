@@ -36,29 +36,41 @@ export async function smeOverview(body) {
             whereClause.created_at = dateFilter;
         }
 
-        // Query 1: SME basic metrics (matching your LEFT JOIN logic)
-        const smeStats = await User.findOne({
-            where: whereClause,
-            include: [{
-                model: FormResponses,
-                as: 'FormResponses',
-                required: false,
-                attributes: [],
-                where: {
-                    [Op.and]: [
-                        User.sequelize.where(User.sequelize.col('User.persona_type'), 'sme')
-                    ]
-                }
-            }],
-            attributes: [
-                [User.sequelize.fn('COUNT', User.sequelize.literal("CASE WHEN \"User\".\"persona_type\" = 'sme' THEN 1 END")), 'total_smes'],
-                [User.sequelize.fn('COUNT', User.sequelize.literal("CASE WHEN \"User\".\"persona_type\" = 'sme' AND \"User\".\"email_verified_at\" IS NOT NULL THEN 1 END")), 'verified_smes'],
-                [User.sequelize.fn('COUNT', User.sequelize.fn('DISTINCT', User.sequelize.col('FormResponses.responder_id'))), 'responding_smes']
-            ],
-            raw: true
+        // Query 1: Total SMEs
+        const totalSmes = await User.count({
+            where: {
+                ...whereClause,
+                persona_type: 'sme',
+                deleted_at: null
+            }
         });
 
-        // Query 2: SME by industry (matching your industry JOIN logic)
+        // Query 2: Verified SMEs
+        const verifiedSmes = await User.count({
+            where: {
+                ...whereClause,
+                persona_type: 'sme',
+                email_verified_at: { [Op.ne]: null },
+                deleted_at: null
+            }
+        });
+
+        // Query 3: SMEs who have responded to forms
+        const respondingSmes = await FormResponses.count({
+            distinct: true,
+            col: 'responder_id',
+            include: [{
+                model: User,
+                where: {
+                    persona_type: 'sme',
+                    deleted_at: null
+                },
+                required: true,
+                attributes: []
+            }]
+        });
+
+        // Query 4: SME by industry
         const smeByIndustry = await UserInformation.findAll({
             attributes: [
                 'industry',
@@ -66,8 +78,10 @@ export async function smeOverview(body) {
             ],
             include: [{
                 model: User,
+                as: 'user',
                 where: {
-                    persona_type: 'sme'
+                    persona_type: 'sme',
+                    deleted_at: null
                 },
                 attributes: [],
                 required: true
@@ -85,9 +99,9 @@ export async function smeOverview(body) {
             statusCode: 200,
             body: {
                 overview: {
-                    total_smes: parseInt(smeStats.total_smes || 0),
-                    verified_smes: parseInt(smeStats.verified_smes || 0),
-                    responding_smes: parseInt(smeStats.responding_smes || 0)
+                    total_smes: totalSmes || 0,
+                    verified_smes: verifiedSmes || 0,
+                    responding_smes: respondingSmes || 0
                 },
                 byIndustry: smeByIndustry.map(item => ({
                     industry: item.industry,
