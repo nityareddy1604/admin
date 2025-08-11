@@ -1,7 +1,7 @@
 // backend/src/ADMIN/analytics/realtimeDashboard.js
 import { config } from 'dotenv';
-import { logger } from '../../logger/logger.js';
-import { User, Idea, FormResponse } from '../../db/pool.js';
+import { logger } from '../logger/logger.js';
+import { User, Idea, FormResponses } from '../db/pool.js';
 import { Op } from 'sequelize';
 
 config();

@@ -15,7 +15,36 @@ export const ADMIN_API_PATHS = {
     GET_USER_DETAILS: '/admin/user/details',    
     EDIT_USER: '/admin/user/edit',              
     APPROVE_USER: '/admin/user/approve',  
-    DELETE_USER: '/admin/user'
+    DELETE_USER: '/admin/user',
+
+    HEALTH: '/admin/health',
+    
+    // User Analytics
+    USERS_OVERVIEW: '/admin/analytics/users/overview',
+    USERS_GROWTH: '/admin/analytics/users/growth', 
+    USERS_DEMOGRAPHICS: '/admin/analytics/users/demographics',
+    
+    // Ideas Analytics
+    IDEAS_OVERVIEW: '/admin/analytics/ideas/overview',
+    
+    // Forms Analytics  
+    FORMS_OVERVIEW: '/admin/analytics/forms/overview',
+    
+    // Engagement Analytics
+    ENGAGEMENT_FUNNEL: '/admin/analytics/engagement/funnel',
+    REALTIME_DASHBOARD: '/admin/analytics/realtime',
+    
+    // SME Analytics
+    SME_OVERVIEW: '/admin/analytics/sme/overview',
+    
+    // Booking Analytics
+    BOOKINGS_OVERVIEW: '/admin/analytics/bookings/overview',
+    
+    // Video/Chime Analytics
+    CHIME_OVERVIEW: '/admin/analytics/chime/overview',
+    CHIME_TRANSCRIPTS: '/admin/analytics/chime/transcripts',
+
+
 }
 
 export const API_PATHS = {

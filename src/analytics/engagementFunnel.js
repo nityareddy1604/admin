@@ -1,7 +1,7 @@
 // backend/src/ADMIN/analytics/engagementFunnel.js
 import { config } from 'dotenv';
-import { logger } from '../../logger/logger.js';
-import { User, UserInformation, Idea, Form, FormResponse } from '../../db/pool.js';
+import { logger } from '../logger/logger.js';
+import { User, UserInformation, Idea, Form, FormResponses } from '../db/pool.js';
 
 config();
 const FILE_NAME = 'analytics/engagementFunnel.js';
@@ -31,7 +31,7 @@ export async function engagementFunnel(body) {
                     attributes: []
                 },
                 {
-                    model: FormResponse,
+                    model: FormResponses,
                     as: 'FormResponses',
                     required: false,
                     attributes: []

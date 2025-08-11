@@ -1,7 +1,7 @@
 // backend/src/ADMIN/analytics/chimeTranscripts.js
 import { config } from 'dotenv';
-import { logger } from '../../logger/logger.js';
-import { Booking, User, UserInformation } from '../../db/pool.js';
+import { logger } from '../logger/logger.js';
+import { Booking, User, UserInformation } from '../db/pool.js';
 import { Op } from 'sequelize';
 
 config();

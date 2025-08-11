@@ -1,7 +1,7 @@
 // backend/src/ADMIN/analytics/bookingsOverview.js
 import { config } from 'dotenv';
-import { logger } from '../../logger/logger.js';
-import { Booking } from '../../db/pool.js';
+import { logger } from '../logger/logger.js';
+import { Booking } from '../db/pool.js';
 import { Op } from 'sequelize';
 
 config();

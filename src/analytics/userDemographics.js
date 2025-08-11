@@ -1,7 +1,7 @@
 // backend/src/ADMIN/analytics/userDemographics.js
 import { config } from 'dotenv';
-import { logger } from '../../logger/logger.js';
-import { User, UserInformation } from '../../db/pool.js';
+import { logger } from '../logger/logger.js';
+import { User, UserInformation } from '../db/pool.js';
 import { Op } from 'sequelize';
 
 config();

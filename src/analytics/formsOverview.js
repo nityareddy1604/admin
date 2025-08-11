@@ -1,7 +1,7 @@
 // backend/src/ADMIN/analytics/formsOverview.js
 import { config } from 'dotenv';
-import { logger } from '../../logger/logger.js';
-import { Form, FormResponse } from '../../db/pool.js';
+import { logger } from '../logger/logger.js';
+import { Form, FormResponses } from '../db/pool.js';
 import { Op } from 'sequelize';
 
 config();
@@ -47,10 +47,10 @@ export async function formsOverview(body) {
         });
 
         // Query 2: Total responses (matching your response count logic)
-        const responseStats = await FormResponse.findOne({
+        const responseStats = await FormResponses.findOne({
             where: whereClause,
             attributes: [
-                [FormResponse.sequelize.fn('COUNT', FormResponse.sequelize.col('id')), 'total_responses']
+                [FormResponses.sequelize.fn('COUNT', FormResponses.sequelize.col('id')), 'total_responses']
             ],
             raw: true
         });
@@ -59,7 +59,7 @@ export async function formsOverview(body) {
         const completionStats = await Form.findOne({
             where: whereClause,
             include: [{
-                model: FormResponse,
+                model: FormResponses,
                 required: false,
                 attributes: []
             }],

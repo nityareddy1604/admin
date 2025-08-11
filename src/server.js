@@ -71,6 +71,19 @@ import { updateBookingAPI } from './booking/update.js';
 import {createMeeting} from './booking/create-meeting.js';
 import { myIdea } from './booking/myIdea.js';   
 
+// Analytics imports
+import { healthCheck } from './analytics/healthCheck.js';
+import { userOverview } from './analytics/userOverview.js';
+import { userGrowth } from './analytics/userGrowth.js';
+import { userDemographics } from './analytics/userDemographics.js';
+import { ideasOverview } from './analytics/ideasOverview.js';
+import { formsOverview } from './analytics/formsOverview.js';
+import { smeOverview } from './analytics/smeOverview.js';
+import { bookingsOverview } from './analytics/bookingsOverview.js';
+import { chimeOverview } from './analytics/chimeOverview.js';
+import { chimeTranscripts } from './analytics/chimeTranscripts.js';
+import { engagementFunnel } from './analytics/engagementFunnel.js';
+import { realtimeDashboard } from './analytics/realtimeDashboard.js';
 
 
 config();
@@ -343,48 +356,48 @@ export const app = async (event, context, requestId) => {
         
 
                 // ===== ANALYTICS LAMBDA FUNCTIONS =====
-        case API_PATHS.HEALTH_CHECK: {
+        case ADMIN_API_PATHS.HEALTH_CHECK: {
             return await healthCheck(body);
         }
-        case API_PATHS.USER_OVERVIEW: {
+        case ADMIN_API_PATHS.USER_OVERVIEW: {
             const period = event.queryStringParameters?.period || 'all';
             return await userOverview({ ...body, period });
         }
-        case API_PATHS.USER_GROWTH: {
+        case ADMIN_API_PATHS.USER_GROWTH: {
             const period = event.queryStringParameters?.period || '30';
             return await userGrowth({ ...body, period });
         }
-        case API_PATHS.USER_DEMOGRAPHICS: {
+        case ADMIN_API_PATHS.USER_DEMOGRAPHICS: {
             return await userDemographics(body);
         }
-        case API_PATHS.IDEAS_OVERVIEW: {
+        case ADMIN_API_PATHS.IDEAS_OVERVIEW: {
             const period = event.queryStringParameters?.period || 'all';
             return await ideasOverview({ ...body, period });
         }
-        case API_PATHS.FORMS_OVERVIEW: {
+        case ADMIN_API_PATHS.FORMS_OVERVIEW: {
             const period = event.queryStringParameters?.period || 'all';
             return await formsOverview({ ...body, period });
         }
-        case API_PATHS.SME_OVERVIEW: {
+        case ADMIN_API_PATHS.SME_OVERVIEW: {
             const period = event.queryStringParameters?.period || 'all';
             return await smeOverview({ ...body, period });
         }
-        case API_PATHS.BOOKINGS_OVERVIEW: {
+        case ADMIN_API_PATHS.BOOKINGS_OVERVIEW: {
             const period = event.queryStringParameters?.period || 'all';
             return await bookingsOverview({ ...body, period });
         }
-        case API_PATHS.CHIME_OVERVIEW: {
+        case ADMIN_API_PATHS.CHIME_OVERVIEW: {
             const period = event.queryStringParameters?.period || 'all';
             return await chimeOverview({ ...body, period });
         }
-        case API_PATHS.CHIME_TRANSCRIPTS: {
+        case ADMIN_API_PATHS.CHIME_TRANSCRIPTS: {
             const period = event.queryStringParameters?.period || '30';
             return await chimeTranscripts({ ...body, period });
         }
-        case API_PATHS.ENGAGEMENT_FUNNEL: {
+        case ADMIN_API_PATHS.ENGAGEMENT_FUNNEL: {
             return await engagementFunnel(body);
         }
-        case API_PATHS.REALTIME_DASHBOARD: {
+        case ADMIN_API_PATHS.REALTIME_DASHBOARD: {
             return await realtimeDashboard(body);
         }
                 /**
