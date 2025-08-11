@@ -375,6 +375,19 @@ expressApp.get(ADMIN_API_PATHS.CHIME_TRANSCRIPTS, async (req, res) => {
     res.status(result.statusCode || 200).json(result);
 });
 
+// Get All Ideas - GET /admin/get-all-ideas-simple
+expressApp.get(ADMIN_API_PATHS.GET_ALL_IDEAS_SIMPLE, async (req, res) => {
+    console.log('🔍 Get All Ideas route hit');
+    
+    const result = await lambdaHandler({
+        body: JSON.stringify(req.query), // Pass query params as body
+        rawPath: ADMIN_API_PATHS.GET_ALL_IDEAS_SIMPLE,
+        headers: req.headers,
+        httpMethod: 'GET'
+    });
+    res.status(result.statusCode || 200).json(result);
+});
+
 
 
 const PORT = process.env.PORT || 3001;

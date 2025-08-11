@@ -84,6 +84,7 @@ import { chimeOverview } from './analytics/chimeOverview.js';
 import { chimeTranscripts } from './analytics/chimeTranscripts.js';
 import { engagementFunnel } from './analytics/engagementFunnel.js';
 import { realtimeDashboard } from './analytics/realtimeDashboard.js';
+import { adminGetAllIdeas } from './idea/getAllIdeas.js';
 
 
 config();
@@ -426,6 +427,9 @@ export const app = async (event, context, requestId) => {
         case ADMIN_API_PATHS.ADMIN_LOGIN: {
             return await adminLogin(body);
         } 
+        case ADMIN_API_PATHS.GET_ALL_IDEAS_SIMPLE: {
+            return await adminGetAllIdeas(body);
+        }
         
         
 

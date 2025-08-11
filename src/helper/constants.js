@@ -6,6 +6,7 @@ export const ADMIN_API_PATHS = {
     UPDATE_BOOKING: '/admin/update-booking',
 
     MY_IDEA: '/admin/my-idea',
+    GET_ALL_IDEAS_SIMPLE: '/admin/get-all-ideas-simple',
 
     ADMIN_LOGIN: '/admin/login',
     ADMIN_LOGOUT: '/admin/logout', 
