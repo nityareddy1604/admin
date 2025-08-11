@@ -209,6 +209,172 @@ expressApp.post(ADMIN_API_PATHS.MY_IDEA, async (req, res) => {
     res.status(result.statusCode || 200).json(result);
 });
 
+// Analytics Routes
+
+// Health Check - GET /admin/health
+expressApp.get(ADMIN_API_PATHS.HEALTH_CHECK, async (req, res) => {
+    console.log('🔍 Health Check route hit');
+    
+    const result = await lambdaHandler({
+        body: JSON.stringify({}),
+        rawPath: ADMIN_API_PATHS.HEALTH_CHECK,
+        headers: req.headers,
+        httpMethod: 'GET'
+    });
+    res.status(result.statusCode || 200).json(result);
+});
+
+// User Overview - GET /admin/analytics/users/overview
+expressApp.get(ADMIN_API_PATHS.USER_OVERVIEW, async (req, res) => {
+    console.log('🔍 User Overview route hit');
+    
+    const result = await lambdaHandler({
+        body: JSON.stringify({}),
+        rawPath: ADMIN_API_PATHS.USER_OVERVIEW,
+        headers: req.headers,
+        httpMethod: 'GET',
+        queryStringParameters: req.query
+    });
+    res.status(result.statusCode || 200).json(result);
+});
+
+// User Growth Tracking - GET /admin/analytics/users/growth
+expressApp.get(ADMIN_API_PATHS.USER_GROWTH, async (req, res) => {
+    console.log('🔍 User Growth route hit');
+    
+    const result = await lambdaHandler({
+        body: JSON.stringify({}),
+        rawPath: ADMIN_API_PATHS.USER_GROWTH,
+        headers: req.headers,
+        httpMethod: 'GET',
+        queryStringParameters: req.query
+    });
+    res.status(result.statusCode || 200).json(result);
+});
+
+// User Demographics - GET /admin/analytics/users/demographics
+expressApp.get(ADMIN_API_PATHS.USER_DEMOGRAPHICS, async (req, res) => {
+    console.log('🔍 User Demographics route hit');
+    
+    const result = await lambdaHandler({
+        body: JSON.stringify({}),
+        rawPath: ADMIN_API_PATHS.USER_DEMOGRAPHICS,
+        headers: req.headers,
+        httpMethod: 'GET'
+    });
+    res.status(result.statusCode || 200).json(result);
+});
+
+// Ideas Overview - GET /admin/analytics/ideas/overview
+expressApp.get(ADMIN_API_PATHS.IDEAS_OVERVIEW, async (req, res) => {
+    console.log('🔍 Ideas Overview route hit');
+    
+    const result = await lambdaHandler({
+        body: JSON.stringify({}),
+        rawPath: ADMIN_API_PATHS.IDEAS_OVERVIEW,
+        headers: req.headers,
+        httpMethod: 'GET',
+        queryStringParameters: req.query
+    });
+    res.status(result.statusCode || 200).json(result);
+});
+
+// Forms Overview - GET /admin/analytics/forms/overview
+expressApp.get(ADMIN_API_PATHS.FORMS_OVERVIEW, async (req, res) => {
+    console.log('🔍 Forms Overview route hit');
+    
+    const result = await lambdaHandler({
+        body: JSON.stringify({}),
+        rawPath: ADMIN_API_PATHS.FORMS_OVERVIEW,
+        headers: req.headers,
+        httpMethod: 'GET',
+        queryStringParameters: req.query
+    });
+    res.status(result.statusCode || 200).json(result);
+});
+
+// User Engagement Funnel - GET /admin/analytics/engagement/funnel
+expressApp.get(ADMIN_API_PATHS.ENGAGEMENT_FUNNEL, async (req, res) => {
+    console.log('🔍 Engagement Funnel route hit');
+    
+    const result = await lambdaHandler({
+        body: JSON.stringify({}),
+        rawPath: ADMIN_API_PATHS.ENGAGEMENT_FUNNEL,
+        headers: req.headers,
+        httpMethod: 'GET'
+    });
+    res.status(result.statusCode || 200).json(result);
+});
+
+// SME Management Overview - GET /admin/analytics/sme/overview
+expressApp.get(ADMIN_API_PATHS.SME_OVERVIEW, async (req, res) => {
+    console.log('🔍 SME Overview route hit');
+    
+    const result = await lambdaHandler({
+        body: JSON.stringify({}),
+        rawPath: ADMIN_API_PATHS.SME_OVERVIEW,
+        headers: req.headers,
+        httpMethod: 'GET',
+        queryStringParameters: req.query
+    });
+    res.status(result.statusCode || 200).json(result);
+});
+
+// Booking Session Overview - GET /admin/analytics/bookings/overview
+expressApp.get(ADMIN_API_PATHS.BOOKINGS_OVERVIEW, async (req, res) => {
+    console.log('🔍 Bookings Overview route hit');
+    
+    const result = await lambdaHandler({
+        body: JSON.stringify({}),
+        rawPath: ADMIN_API_PATHS.BOOKINGS_OVERVIEW,
+        headers: req.headers,
+        httpMethod: 'GET',
+        queryStringParameters: req.query
+    });
+    res.status(result.statusCode || 200).json(result);
+});
+
+// Real-time Dashboard - GET /admin/analytics/realtime
+expressApp.get(ADMIN_API_PATHS.REALTIME_DASHBOARD, async (req, res) => {
+    console.log('🔍 Realtime Dashboard route hit');
+    
+    const result = await lambdaHandler({
+        body: JSON.stringify({}),
+        rawPath: ADMIN_API_PATHS.REALTIME_DASHBOARD,
+        headers: req.headers,
+        httpMethod: 'GET'
+    });
+    res.status(result.statusCode || 200).json(result);
+});
+
+// Video Conferencing Overview - GET /admin/analytics/chime/overview
+expressApp.get(ADMIN_API_PATHS.CHIME_OVERVIEW, async (req, res) => {
+    console.log('🔍 Chime Overview route hit');
+    
+    const result = await lambdaHandler({
+        body: JSON.stringify({}),
+        rawPath: ADMIN_API_PATHS.CHIME_OVERVIEW,
+        headers: req.headers,
+        httpMethod: 'GET',
+        queryStringParameters: req.query
+    });
+    res.status(result.statusCode || 200).json(result);
+});
+
+// Transcript Analytics - GET /admin/analytics/chime/transcripts
+expressApp.get(ADMIN_API_PATHS.CHIME_TRANSCRIPTS, async (req, res) => {
+    console.log('🔍 Chime Transcripts route hit');
+    
+    const result = await lambdaHandler({
+        body: JSON.stringify({}),
+        rawPath: ADMIN_API_PATHS.CHIME_TRANSCRIPTS,
+        headers: req.headers,
+        httpMethod: 'GET',
+        queryStringParameters: req.query
+    });
+    res.status(result.statusCode || 200).json(result);
+});
+
 
 
 const PORT = process.env.PORT || 3001;
