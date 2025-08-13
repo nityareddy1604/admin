@@ -1,11 +1,11 @@
-// src/admin/getAllIdeas.js
+// src/idea/getAllIdeas.js
 import { config } from 'dotenv';
 import { logger } from '../logger/logger.js';
 import { Idea, User, UserInformation } from '../db/pool.js';
 import { Op } from 'sequelize';
 
 config();
-const FILE_NAME = 'admin/getAllIdeas.js';
+const FILE_NAME = 'idea/getAllIdeas.js';
 
 export async function adminGetAllIdeas(body) {
     const requestId = body.requestId;

@@ -9,17 +9,16 @@ config();
 const FILE_NAME = 'admin/users/editUser.js';
 
 export async function adminEditUser(body) {
-    const userId = body.userId; // From URL parameter
+    const targetUserId = body.targetUserId; // Changed from body.userId to body.targetUserId
     const requestId = body.requestId;
     delete body.requestId;
-    delete body.userId;
     
     try {
-        if (!userId) {
+        if (!targetUserId) {
             return {
                 statusCode: 400,
                 body: {
-                    message: 'User ID is required.'
+                    message: 'targetUserId is required.'
                 }
             };
         }
@@ -67,7 +66,7 @@ export async function adminEditUser(body) {
         
         // Check if user exists
         const existingUserResponse = await getUser(
-            { id: userId, deleted_at: null },
+            { id: targetUserId, deleted_at: null },
             [{
                 model: UserInformation,
                 as: 'user_information',
@@ -106,7 +105,7 @@ export async function adminEditUser(body) {
         // Update user table if there are changes
         if (Object.keys(userUpdates).length > 0) {
             const updateUserResponse = await updateUser(
-                { id: userId, deleted_at: null },
+                { id: targetUserId, deleted_at: null }, // FIXED: changed from userId to targetUserId
                 userUpdates,
                 requestId
             );
@@ -138,12 +137,12 @@ export async function adminEditUser(body) {
                     // Update existing user_information record
                     await UserInformation.update(
                         { ...profileUpdates, updated_at: new Date() },
-                        { where: { user_id: userId } }
+                        { where: { user_id: targetUserId } } // FIXED: changed from userId to targetUserId
                     );
                 } else {
                     // Create new user_information record
                     await UserInformation.create({
-                        user_id: userId,
+                        user_id: targetUserId, // FIXED: changed from userId to targetUserId
                         ...profileUpdates,
                         created_at: new Date(),
                         updated_at: new Date()
@@ -153,7 +152,7 @@ export async function adminEditUser(body) {
                 logger.error(FILE_NAME, 'adminEditUser', requestId, {
                     error: profileError,
                     message: 'Failed to update user profile information',
-                    userId
+                    targetUserId // FIXED: changed from userId to targetUserId
                 });
                 return {
                     statusCode: 500,
@@ -166,7 +165,7 @@ export async function adminEditUser(body) {
         
         // Fetch updated user data to return
         const updatedUserResponse = await getUser(
-            { id: userId, deleted_at: null },
+            { id: targetUserId, deleted_at: null }, // FIXED: changed from userId to targetUserId
             [{
                 model: UserInformation,
                 as: 'user_information',
@@ -204,7 +203,7 @@ export async function adminEditUser(body) {
         
         logger.info(FILE_NAME, 'adminEditUser', requestId, {
             message: 'Admin successfully updated user',
-            userId,
+            targetUserId, // FIXED: changed from userId to targetUserId
             updatedFields: {
                 userFields: Object.keys(userUpdates),
                 profileFields: Object.keys(profileUpdates)
@@ -224,7 +223,7 @@ export async function adminEditUser(body) {
             error,
             errorMessage: error.message,
             errorStack: error.stack,
-            userId
+            targetUserId // Already correct
         });
         return {
             statusCode: 500,
@@ -234,4 +233,3 @@ export async function adminEditUser(body) {
         };
     }
 }
-

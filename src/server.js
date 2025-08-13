@@ -69,7 +69,7 @@ import { createBookingAdmin } from './booking/create-booking.js';
 import {getAvailableSlots} from './booking/getAvailableSlots.js';
 import { updateBookingAPI } from './booking/update.js';
 import {createMeeting} from './booking/create-meeting.js';
-import { myIdea } from './booking/myIdea.js';   
+import { myIdea } from './idea/myIdea.js';   
 
 // Analytics imports
 import { healthCheck } from './analytics/healthCheck.js';
@@ -85,6 +85,18 @@ import { chimeTranscripts } from './analytics/chimeTranscripts.js';
 import { engagementFunnel } from './analytics/engagementFunnel.js';
 import { realtimeDashboard } from './analytics/realtimeDashboard.js';
 import { adminGetAllIdeas } from './idea/getAllIdeas.js';
+
+import { adminGetIdeaLensStatus } from './idea/getIdeaLensStatus.js';
+import { adminDeleteIdea } from './idea/deleteIdea.js';
+
+import { adminGetAllForms } from './forms/getAllForms.js';
+import { adminEditForm } from './forms/editForm.js';
+import { adminGetFormResponses } from './forms/getFormResponses.js';
+import { adminDeleteForm } from './forms/deleteForm.js';
+import { adminGetUserSelections } from './booking/getUserSelections.js';
+import { adminEditBooking } from './booking/editBooking.js';
+
+
 
 
 config();
@@ -165,7 +177,7 @@ export const app = async (event, context, requestId) => {
         // For admin routes, preserve the original userId from request, store admin ID separately
         if (isAdminRoute) {
             body.adminUserId = tokenData.userId; // Store admin ID separately
-            // Don't overwrite body.userId - keep the target user ID
+            body.userId = 'admin';// Don't overwrite body.userId - keep the target user ID
         } else {
             body.userId = tokenData.userId; // For regular routes, set user ID normally
         }
@@ -416,20 +428,47 @@ export const app = async (event, context, requestId) => {
         case ADMIN_API_PATHS.GET_ALL_USERS: {
             return await getAllUsers(body);
         }
+        case ADMIN_API_PATHS.DELETE_USER: {
+            return await adminDeleteUser(body); // No more pathParameters needed
+        }
         case ADMIN_API_PATHS.EDIT_USER: {
-            const userId = event.pathParameters?.userId || body.userId;
-            return await adminEditUser({ ...body, userId });
+            return await adminEditUser(body); // No more pathParameters needed
         } 
         case ADMIN_API_PATHS.GET_USER_DETAILS: {
-            const userId = event.pathParameters?.userId || body.userId;
-            return await adminGetUserDetails({ ...body, userId, requestId: body.requestId });
-        }     
+            return await adminGetUserDetails(body); // No more pathParameters needed
+        } 
         case ADMIN_API_PATHS.ADMIN_LOGIN: {
             return await adminLogin(body);
         } 
         case ADMIN_API_PATHS.GET_ALL_IDEAS_SIMPLE: {
             return await adminGetAllIdeas(body);
         }
+        case ADMIN_API_PATHS.GET_IDEA_LENS_STATUS: {
+            return await adminGetIdeaLensStatus(body);
+        }
+        case ADMIN_API_PATHS.DELETE_IDEA: {
+            return await adminDeleteIdea(body);
+        }
+
+        case ADMIN_API_PATHS.GET_ALL_FORMS: {
+            return await adminGetAllForms(body);
+        }
+        case ADMIN_API_PATHS.EDIT_FORM: {
+            return await adminEditForm(body);
+        }
+        case ADMIN_API_PATHS.GET_FORM_RESPONSES: {
+            return await adminGetFormResponses(body);
+        }
+        case ADMIN_API_PATHS.DELETE_FORM: {
+            return await adminDeleteForm(body);
+        }
+        case ADMIN_API_PATHS.GET_USER_SELECTIONS: {
+            return await adminGetUserSelections(body);
+        }
+        case ADMIN_API_PATHS.EDIT_BOOKING: {
+            return await adminEditBooking(body);
+        }
+
         
         
 

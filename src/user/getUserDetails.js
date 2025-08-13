@@ -7,27 +7,26 @@ import { UserInformation } from '../db/pool.js';
 config();
 const FILE_NAME = 'admin/users/getUserDetails.js';
 
+// Fix the variable references in adminGetUserDetails function
+
 export async function adminGetUserDetails(body) {
-    const userId = body.userId; // From URL parameter or body
+    const targetUserId = body.targetUserId; 
     const requestId = body.requestId;
     delete body.requestId;
-    delete body.userId;
     
     try {
-        // Validate userId
-        if (!userId || isNaN(parseInt(userId))) {
+        if (!targetUserId || isNaN(parseInt(targetUserId))) {
             return {
                 statusCode: 400,
                 body: {
-                    message: 'Invalid user ID'
+                    message: 'Invalid targetUserId'
                 }
             };
         }
         
-        // Fetch user with full profile information
         const userResponse = await getUser(
             { 
-                id: userId,
+                id: targetUserId,
                 deleted_at: null 
             },
             [{
@@ -69,7 +68,7 @@ export async function adminGetUserDetails(body) {
             persona_type: user.persona_type,
             created_at: user.created_at,
             updated_at: user.updated_at,
-            verified_by_admin: !!user.email_verified_at, // Convert to boolean for frontend compatibility
+            verified_by_admin: !!user.email_verified_at,
             email_verified_at: user.email_verified_at,
             
             // Profile fields (with null fallbacks)
@@ -100,23 +99,23 @@ export async function adminGetUserDetails(body) {
                     if (typeof rawValue === 'string') {
                         userDetails[field] = JSON.parse(rawValue);
                     } else {
-                        userDetails[field] = rawValue; // Already parsed by Sequelize
+                        userDetails[field] = rawValue;
                     }
                 } catch (error) {
                     logger.warn(FILE_NAME, 'adminGetUserDetails', requestId, {
                         message: `Failed to parse ${field}`,
-                        userId,
+                        targetUserId, // FIXED: Changed from userId to targetUserId
                         rawValue,
                         error: error.message
                     });
-                    userDetails[field] = rawValue; // Keep original if parsing fails
+                    userDetails[field] = rawValue;
                 }
             }
         });
         
         logger.info(FILE_NAME, 'adminGetUserDetails', requestId, {
             message: 'User details retrieved successfully',
-            userId
+            targetUserId // FIXED: Changed from userId to targetUserId
         });
         
         return {
@@ -132,100 +131,7 @@ export async function adminGetUserDetails(body) {
             error,
             errorMessage: error.message,
             errorStack: error.stack,
-            userId
-        });
-        return {
-            statusCode: 500,
-            body: {
-                message: 'Internal Server Error! Failed to fetch user details.'
-            }
-        };
-    }
-}
-
-// Alternative version using direct database query (if you prefer raw SQL)
-export async function adminGetUserDetailsRaw(body) {
-    const userId = body.userId;
-    const requestId = body.requestId;
-    delete body.requestId;
-    delete body.userId;
-    
-    try {
-        // Validate userId
-        if (!userId || isNaN(parseInt(userId))) {
-            return {
-                statusCode: 400,
-                body: {
-                    message: 'Invalid user ID'
-                }
-            };
-        }
-        
-        // Import Sequelize connection for raw queries
-        const { sequelize } = await import('../../db/pool.js');
-        
-        const query = `
-            SELECT 
-                u.id, u.email, u.temp_id, u.auth_type, u.persona_type,
-                u.created_at, u.updated_at, u.verified_by_admin, u.email_verified_at,
-                ui.name, ui.linkedin, ui.github, ui.industry, ui.country,
-                ui.experience, ui.avatar, ui.profile_title, ui.available_time_slots,
-                ui.cv_url, ui.age, ui.description, ui.gender, ui.linkedin_profile_data
-            FROM users u
-            LEFT JOIN user_information ui ON u.id = ui.user_id
-            WHERE u.id = :userId AND u.deleted_at IS NULL
-        `;
-        
-        const [results] = await sequelize.query(query, {
-            replacements: { userId },
-            type: sequelize.QueryTypes.SELECT
-        });
-        
-        if (!results || results.length === 0) {
-            return {
-                statusCode: 404,
-                body: {
-                    message: 'User not found'
-                }
-            };
-        }
-        
-        const userDetails = results[0];
-        
-        // Convert verified_by_admin to boolean for frontend compatibility
-        userDetails.verified_by_admin = !!userDetails.email_verified_at;
-        
-        // Safely parse JSON fields
-        const jsonFields = ['available_time_slots', 'linkedin_profile_data'];
-        jsonFields.forEach(field => {
-            if (userDetails[field]) {
-                try {
-                    userDetails[field] = JSON.parse(userDetails[field]);
-                } catch (error) {
-                    logger.warn(FILE_NAME, 'adminGetUserDetailsRaw', requestId, {
-                        message: `Failed to parse ${field}`,
-                        userId,
-                        error: error.message
-                    });
-                    // Keep original string if JSON parse fails
-                }
-            }
-        });
-        
-        return {
-            statusCode: 200,
-            body: {
-                message: 'User details retrieved successfully',
-                user: userDetails
-            }
-        };
-        
-    } catch (error) {
-        logger.error(FILE_NAME, 'adminGetUserDetailsRaw', requestId, {
-            error,
-            errorMessage: error.message,
-            errorStack: error.stack,
-            userId
+            targetUserId // FIXED: Changed from userId to targetUserId
         });
         return {
             statusCode: 500,

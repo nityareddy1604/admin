@@ -4,9 +4,13 @@ export const ADMIN_API_PATHS = {
     GET_ALL_BOOKINGS: '/admin/get-all-bookings',
     AVAILABLE_SLOTS: '/admin/get-available-slots',
     UPDATE_BOOKING: '/admin/update-booking',
+    GET_USER_SELECTIONS: '/admin/bookings/user-selections',
+    EDIT_BOOKING: '/admin/bookings/edit',
 
     MY_IDEA: '/admin/my-idea',
     GET_ALL_IDEAS_SIMPLE: '/admin/get-all-ideas-simple',
+    GET_IDEA_LENS_STATUS: '/admin/idea/lens-status',
+    DELETE_IDEA: '/admin/idea/delete',
 
     ADMIN_LOGIN: '/admin/login',
     ADMIN_LOGOUT: '/admin/logout', 
@@ -24,26 +28,19 @@ export const ADMIN_API_PATHS = {
     USERS_OVERVIEW: '/admin/analytics/users/overview',
     USERS_GROWTH: '/admin/analytics/users/growth', 
     USERS_DEMOGRAPHICS: '/admin/analytics/users/demographics',
-    
-    // Ideas Analytics
-    IDEAS_OVERVIEW: '/admin/analytics/ideas/overview',
-    
-    // Forms Analytics  
+    IDEAS_OVERVIEW: '/admin/analytics/ideas/overview',  
     FORMS_OVERVIEW: '/admin/analytics/forms/overview',
-    
-    // Engagement Analytics
     ENGAGEMENT_FUNNEL: '/admin/analytics/engagement/funnel',
     REALTIME_DASHBOARD: '/admin/analytics/realtime',
-    
-    // SME Analytics
     SME_OVERVIEW: '/admin/analytics/sme/overview',
-    
-    // Booking Analytics
     BOOKINGS_OVERVIEW: '/admin/analytics/bookings/overview',
-    
-    // Video/Chime Analytics
     CHIME_OVERVIEW: '/admin/analytics/chime/overview',
     CHIME_TRANSCRIPTS: '/admin/analytics/chime/transcripts',
+
+    GET_ALL_FORMS: '/admin/forms/all',
+    EDIT_FORM: '/admin/forms/edit',
+    GET_FORM_RESPONSES: '/admin/forms/responses',
+    DELETE_FORM: '/admin/forms/delete',
 
 
 }

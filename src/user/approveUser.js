@@ -8,11 +8,11 @@ const FILE_NAME = 'admin/users/approveUser.js';
 
 export async function adminApproveUser(body) {
     console.log('adminApproveUser called with:', body);
-    // Get userId from the request body (from URL parameter)
-    const targetUserId = body.userId; // This should be from URL params, not admin's userId
+    
+    // Get targetUserId from the request body instead of userId
+    const targetUserId = body.targetUserId; // Changed from body.userId to body.targetUserId
     const requestId = body.requestId;
     delete body.requestId;
-    // Don't delete userId here, we need it!
     
     try {
         const { isApproved } = body;
@@ -30,7 +30,7 @@ export async function adminApproveUser(body) {
             return {
                 statusCode: 400,
                 body: {
-                    message: 'Valid user ID is required.'
+                    message: 'Valid targetUserId is required.'
                 }
             };
         }
@@ -41,7 +41,7 @@ export async function adminApproveUser(body) {
         };
 
         const updateUserResponse = await updateUser(
-            { id: targetUserId, deleted_at: null }, // Use targetUserId here
+            { id: targetUserId, deleted_at: null },
             updateData,
             requestId
         );
@@ -62,7 +62,7 @@ export async function adminApproveUser(body) {
             error,
             errorMessage: error.message,
             errorStack: error.stack,
-            userId
+            targetUserId // Changed from userId to targetUserId
         });
         return {
             statusCode: 500,

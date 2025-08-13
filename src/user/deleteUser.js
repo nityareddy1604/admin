@@ -7,28 +7,26 @@ config();
 const FILE_NAME = 'admin/users/deleteUser.js';
 
 export async function adminDeleteUser(body) {
-    const userId = body.userId; // From URL parameter
+    const targetUserId = body.targetUserId; // Changed from body.userId to body.targetUserId
     const requestId = body.requestId;
     delete body.requestId;
-    delete body.userId;
     
     try {
-        if (!userId) {
+        if (!targetUserId) {
             return {
                 statusCode: 400,
                 body: {
-                    message: 'User ID is required.'
+                    message: 'targetUserId is required.'
                 }
             };
         }
 
-        // Soft delete by setting deleted_at timestamp
         const updateData = {
             deleted_at: new Date()
         };
 
         const deleteUserResponse = await updateUser(
-            { id: userId, deleted_at: null }, // Only delete if not already deleted
+            { id: targetUserId, deleted_at: null },
             updateData,
             requestId
         );
@@ -41,7 +39,7 @@ export async function adminDeleteUser(body) {
             statusCode: 200,
             body: {
                 message: 'User deleted successfully',
-                deleted_user_id: userId
+                deleted_user_id: targetUserId
             }
         };
     } catch (error) {
@@ -49,7 +47,7 @@ export async function adminDeleteUser(body) {
             error,
             errorMessage: error.message,
             errorStack: error.stack,
-            userId
+            targetUserId // Changed from userId
         });
         return {
             statusCode: 500,

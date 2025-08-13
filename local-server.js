@@ -47,79 +47,54 @@ expressApp.post(ADMIN_API_PATHS.CREATE_USER, async (req, res) => {
 });
 
 // Approve User - PUT /admin/user/:userId/approve
-expressApp.put('/admin/user/:userId/approve', async (req, res) => {
-    console.log('🔍 Approve route hit - userId from URL:', req.params.userId);
-    console.log('🔍 Request URL:', req.url);
-    console.log('🔍 Request params:', req.params);
-    
-    const bodyWithUserId = {
-        ...req.body,
-        userId: req.params.userId
-    };
+expressApp.post(ADMIN_API_PATHS.APPROVE_USER, async (req, res) => {
+    console.log('🔍 Approve route hit (POST) - targetUserId from body:', req.body.targetUserId);
+    console.log('🔍 Request body:', req.body);
     
     const result = await lambdaHandler({
-        body: JSON.stringify(bodyWithUserId),
-        rawPath: ADMIN_API_PATHS.APPROVE_USER,  // 🔥 FIX: Use constant
+        body: JSON.stringify(req.body), // Pass body directly - targetUserId is in the body
+        rawPath: ADMIN_API_PATHS.APPROVE_USER,
         headers: req.headers,
-        httpMethod: 'PUT',
-        pathParameters: { userId: req.params.userId }
+        httpMethod: 'POST'
     });
     res.status(result.statusCode || 200).json(result);
 });
 
-// Delete User - DELETE /admin/user/:userId
-expressApp.delete('/admin/user/:userId', async (req, res) => {
-    console.log('🔍 Delete route hit - userId from URL:', req.params.userId);
-    
-    const bodyWithUserId = {
-        ...req.body,
-        userId: req.params.userId
-    };
+// Delete User - POST /admin/user/delete
+expressApp.post(ADMIN_API_PATHS.DELETE_USER, async (req, res) => {
+    console.log('🔍 Delete User route hit (POST) - targetUserId from body:', req.body.targetUserId);
     
     const result = await lambdaHandler({
-        body: JSON.stringify(bodyWithUserId),
-        rawPath: ADMIN_API_PATHS.DELETE_USER,  // 🔥 FIX: Use constant
+        body: JSON.stringify(req.body),
+        rawPath: ADMIN_API_PATHS.DELETE_USER,
         headers: req.headers,
-        httpMethod: 'DELETE',
-        pathParameters: { userId: req.params.userId }
+        httpMethod: 'POST'
     });
     res.status(result.statusCode || 200).json(result);
 });
 
-// Get User Details - GET /admin/user/:userId/details
-expressApp.get('/admin/user/:userId/details', async (req, res) => {
-    console.log('🔍 Get User Details route hit - userId from URL:', req.params.userId);
-    
-    const bodyWithUserId = {
-        userId: req.params.userId,
-        requestId: Date.now()
-    };
+// Get User Details - POST /admin/user/details
+expressApp.post(ADMIN_API_PATHS.GET_USER_DETAILS, async (req, res) => {
+    console.log('🔍 Get User Details route hit (POST) - targetUserId from body:', req.body.targetUserId);
     
     const result = await lambdaHandler({
-        body: JSON.stringify(bodyWithUserId),
-        rawPath: ADMIN_API_PATHS.GET_USER_DETAILS,  // Uses constant
+        body: JSON.stringify(req.body),
+        rawPath: ADMIN_API_PATHS.GET_USER_DETAILS,
         headers: req.headers,
-        httpMethod: 'GET',
-        pathParameters: { userId: req.params.userId }
+        httpMethod: 'POST'
     });
     res.status(result.statusCode || 200).json(result);
 });
 
-// Edit User - PUT /admin/user/:userId/edit  
-expressApp.put('/admin/user/:userId/edit', async (req, res) => {
-    console.log('🔍 Edit User route hit - userId from URL:', req.params.userId);
-    
-    const bodyWithUserId = {
-        ...req.body,
-        userId: req.params.userId
-    };
+// Edit User - POST /admin/user/edit
+expressApp.post(ADMIN_API_PATHS.EDIT_USER, async (req, res) => {
+    console.log('🔍 Edit User route hit (POST) - targetUserId from body:', req.body.targetUserId);
     
     const result = await lambdaHandler({
-        body: JSON.stringify(bodyWithUserId),
-        rawPath: ADMIN_API_PATHS.EDIT_USER,  // Uses constant
+        body: JSON.stringify(req.body),
+        rawPath: ADMIN_API_PATHS.EDIT_USER,
         headers: req.headers,
-        httpMethod: 'PUT', 
-        pathParameters: { userId: req.params.userId }
+        httpMethod: 'POST'
     });
     res.status(result.statusCode || 200).json(result);
 });
@@ -388,6 +363,114 @@ expressApp.get(ADMIN_API_PATHS.GET_ALL_IDEAS_SIMPLE, async (req, res) => {
     res.status(result.statusCode || 200).json(result);
 });
 
+// Get Idea Lens Status - POST /admin/idea/lens-status
+expressApp.post(ADMIN_API_PATHS.GET_IDEA_LENS_STATUS, async (req, res) => {
+    console.log('🔍 Get Idea Lens Status route hit - ideaId:', req.body.ideaId);
+    
+    const result = await lambdaHandler({
+        body: JSON.stringify(req.body),
+        rawPath: ADMIN_API_PATHS.GET_IDEA_LENS_STATUS,
+        headers: req.headers,
+        httpMethod: 'POST'
+    });
+    res.status(result.statusCode || 200).json(result);
+});
+
+// Delete Idea - POST /admin/idea/delete
+expressApp.post(ADMIN_API_PATHS.DELETE_IDEA, async (req, res) => {
+    console.log('🔍 Delete Idea route hit - ideaId:', req.body.ideaId);
+    
+    const result = await lambdaHandler({
+        body: JSON.stringify(req.body),
+        rawPath: ADMIN_API_PATHS.DELETE_IDEA,
+        headers: req.headers,
+        httpMethod: 'POST'
+    });
+    res.status(result.statusCode || 200).json(result);
+});
+
+// Get All Forms - GET /admin/forms/all
+expressApp.get(ADMIN_API_PATHS.GET_ALL_FORMS, async (req, res) => {
+    console.log('🔍 Get All Forms route hit');
+    
+    const result = await lambdaHandler({
+        body: JSON.stringify({}),
+        rawPath: ADMIN_API_PATHS.GET_ALL_FORMS,
+        headers: req.headers,
+        httpMethod: 'GET'
+    });
+    res.status(result.statusCode || 200).json(result);
+});
+
+// Edit Form - POST /admin/forms/edit
+expressApp.post(ADMIN_API_PATHS.EDIT_FORM, async (req, res) => {
+    console.log('🔍 Edit Form route hit - formId:', req.body.formId);
+    
+    const result = await lambdaHandler({
+        body: JSON.stringify(req.body),
+        rawPath: ADMIN_API_PATHS.EDIT_FORM,
+        headers: req.headers,
+        httpMethod: 'POST'
+    });
+    res.status(result.statusCode || 200).json(result);
+});
+
+// Get Form Responses - POST /admin/forms/responses
+expressApp.post(ADMIN_API_PATHS.GET_FORM_RESPONSES, async (req, res) => {
+    console.log('🔍 Get Form Responses route hit - formId:', req.body.formId);
+    
+    const result = await lambdaHandler({
+        body: JSON.stringify(req.body),
+        rawPath: ADMIN_API_PATHS.GET_FORM_RESPONSES,
+        headers: req.headers,
+        httpMethod: 'POST'
+    });
+    res.status(result.statusCode || 200).json(result);
+});
+
+// Delete Form - POST /admin/forms/delete
+expressApp.post(ADMIN_API_PATHS.DELETE_FORM, async (req, res) => {
+    console.log('🔍 Delete Form route hit - formId:', req.body.formId);
+    
+    const result = await lambdaHandler({
+        body: JSON.stringify(req.body),
+        rawPath: ADMIN_API_PATHS.DELETE_FORM,
+        headers: req.headers,
+        httpMethod: 'POST'
+    });
+    res.status(result.statusCode || 200).json(result);
+});
+
+expressApp.post(ADMIN_API_PATHS.GET_USER_SELECTIONS, async (req, res) => {
+    console.log('🔍 Get User Selections route hit');
+    
+    const result = await lambdaHandler({
+        body: JSON.stringify(req.body || {}),
+        rawPath: ADMIN_API_PATHS.GET_USER_SELECTIONS,
+        headers: req.headers,
+        httpMethod: 'POST'
+    });
+    res.status(result.statusCode || 200).json(result);
+});
+
+// Edit Booking - POST /admin/bookings/edit
+expressApp.post(ADMIN_API_PATHS.EDIT_BOOKING, async (req, res) => {
+    console.log('🔍 Edit Booking route hit - bookingId:', req.body.bookingId);
+    console.log('🔍 Edit data:', {
+        creator_id: req.body.creator_id,
+        participant_id: req.body.participant_id,
+        start_time: req.body.start_time,
+        end_time: req.body.end_time
+    });
+    
+    const result = await lambdaHandler({
+        body: JSON.stringify(req.body),
+        rawPath: ADMIN_API_PATHS.EDIT_BOOKING,
+        headers: req.headers,
+        httpMethod: 'POST'
+    });
+    res.status(result.statusCode || 200).json(result);
+});
 
 
 const PORT = process.env.PORT || 3001;

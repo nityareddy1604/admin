@@ -12,6 +12,7 @@ export const handler = async (event, context) => {
     console.log('- event.path:', event.path);
     console.log('- event.rawPath:', event.rawPath);
     console.log('- event.body:', event.body);
+    console.log('- event.pathParameters:', event.pathParameters);
     console.log('- event.headers:', JSON.stringify(event.headers, null, 2));
     console.log('=== END DEBUG ===');
     
@@ -23,7 +24,11 @@ export const handler = async (event, context) => {
             rawPath: event.rawPath || event.path || event.requestContext?.http?.path || '/admin/login',
             headers: event.headers || {},
             body: event.body || '{}',
-            isBase64Encoded: event.isBase64Encoded || false
+            isBase64Encoded: event.isBase64Encoded || false,
+            // 🔥 FIX: Add pathParameters extraction
+            pathParameters: event.pathParameters || event.requestContext?.pathParameters || null,
+            // Also add queryStringParameters for completeness
+            queryStringParameters: event.queryStringParameters || event.requestContext?.queryStringParameters || null
         };
         
         console.log('Transformed event:', JSON.stringify(transformedEvent, null, 2));
